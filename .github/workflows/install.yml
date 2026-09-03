@@ -1,0 +1,25 @@
+# The only way to prove a cask is to install it on a Mac, and the maintainer does not
+# have one. A hosted macOS runner does exactly what a user does: tap, install, run.
+name: install
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  install:
+    runs-on: macos-latest
+    timeout-minutes: 20
+    steps:
+      - name: tap, install, run, uninstall
+        run: |
+          brew tap spelingbee/tap
+          brew install spelingbee/tap/drillback
+          drillback version
+          drillback recipe show gitea --inputs-only
+          brew uninstall drillback
+          brew untap spelingbee/tap
